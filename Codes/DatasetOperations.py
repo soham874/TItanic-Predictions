@@ -28,7 +28,7 @@ def check_and_load_data():
 
     titanic_data = pd.read_csv(os.path.join(DATASETS,'train.csv'))
     print("Information about loaded training set ->")
-    print(titanic_data.info())
+    # print(titanic_data.info())
 
     # splitting data into features and labels
     # X_train = titanic_data.drop("Survived",axis=1)
@@ -39,10 +39,21 @@ def check_and_load_data():
 
 def process_data(titanic_data):
 
-    # plotting the available information for each column in histograms and saving it
-    titanic_data.hist(bins=50, figsize=(20,15))
-    ## plt.savefig(os.path.join(IMAGE_PATH,"column_information.png"))
-    ## plt.show()
+    # Coverting Embarked data into integer type
+    # 1 -> Cherbourg(C)
+    # 2 -> Queenstown(Q)
+    # 3 -> Southampton(S)
+    titanic_data.loc[titanic_data["Embarked"] == 'C', "Embarked" ] = 1
+    titanic_data.loc[titanic_data["Embarked"] == 'Q', "Embarked" ] = 2
+    titanic_data.loc[titanic_data["Embarked"] == 'S', "Embarked" ] = 3
+    titanic_data["Embarked"] = pd.to_numeric(titanic_data["Embarked"])
 
+    # Dropping name and ticket number column
     titanic_data.drop("Name",axis=1,inplace = True)
     titanic_data.drop("Ticket",axis=1,inplace = True)
+
+    # plotting the available information for each column in histograms and saving it
+    print(titanic_data.info())
+    titanic_data.hist(bins=50, figsize=(20,15))
+    plt.savefig(os.path.join(IMAGE_PATH,"column_information.png"))
+    plt.show()    
