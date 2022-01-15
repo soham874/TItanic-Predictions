@@ -1,9 +1,9 @@
 from sklearn.model_selection import StratifiedShuffleSplit
+from numpy import savetxt
 
 import os
 import matplotlib.pyplot as plt
 import pandas as pd
-
 
 # Generic Paths
 MODEL_PATH = os.path.join("Models")
@@ -17,6 +17,8 @@ if not os.path.isdir(MODEL_PATH):
 if not os.path.isdir(DATASETS):
     os.makedirs(DATASETS)
 
+
+
 # load the training set as a pandas dataframe and split it into features and labels
 def check_and_load_data():
 
@@ -27,14 +29,9 @@ def check_and_load_data():
     print("<< Datasets found, loading...")
 
     titanic_data = pd.read_csv(os.path.join(DATASETS,'train.csv'))
-    # print("Information about loaded training set ->")
-    # print(titanic_data.info())
+    print("Information about loaded training set ->")
+    print(titanic_data.info())
 
-    # splitting data into features and labels
-    # X_train = titanic_data.drop("Survived",axis=1)
-    # y_train = titanic_data["Survived"].copy()
-
-    # return X_train,y_train
     return titanic_data
 
 def process_data(titanic_data):
@@ -48,12 +45,17 @@ def process_data(titanic_data):
     titanic_data.loc[titanic_data["Embarked"] == 'S', "Embarked" ] = 3
     titanic_data["Embarked"] = pd.to_numeric(titanic_data["Embarked"])
 
+    # Coverting Gender data into integer type
+    # 1 -> male
+    # 2 -> female
+    titanic_data.loc[titanic_data["Sex"] == "male", "Sex" ] = 1
+    titanic_data.loc[titanic_data["Sex"] == "female", "Sex" ] = 2
+    titanic_data["Sex"] = pd.to_numeric(titanic_data["Sex"])
+
     # Dropping cabin, name and ticket number column
     titanic_data.drop("Name",axis=1,inplace = True)
     titanic_data.drop("Ticket",axis=1,inplace = True)
     titanic_data.drop("Cabin",axis=1,inplace = True)
-
-    return
 
     # Splitting the set into train and test set
     print("<< Splitting data into train and test sets ->")
@@ -66,10 +68,19 @@ def process_data(titanic_data):
     print(strat_test_set.shape)
     print("Target stats for the created set ->")
     print(strat_train_set["Survived"].value_counts())
-    print(strat_test_set["Survived"].value_counts())
-    
+    print(strat_test_set["Survived"].value_counts())  
+
     # plotting the available information for each column in histograms and saving it
-    print(titanic_data.info())
-    titanic_data.hist(bins=50, figsize=(20,15))
-    plt.savefig(os.path.join(IMAGE_PATH,"column_information.png"))
-    plt.show()    
+    print("Information about final processed training dataset ->")
+    print(strat_train_set.info())
+    strat_train_set.hist(bins=50, figsize=(20,15))
+    plt.savefig(os.path.join(IMAGE_PATH,"column_information_prepared.png"))
+    plt.show()
+
+    # splitting data into features and labels
+    X_train = strat_train_set.drop("Survived",axis=1)
+    y_train = strat_train_set["Survived"].copy()
+
+    strat_test_set.to_csv(os.path.join(DATASETS,'test_from_train.csv'))
+
+    return X_train,y_train
