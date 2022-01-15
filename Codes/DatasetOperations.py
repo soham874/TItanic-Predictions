@@ -1,6 +1,7 @@
 from numpy import loadtxt,savetxt
 
 import os
+import pandas as pd
 
 # Generic Paths
 MODEL_PATH = os.path.join("Models")
@@ -19,4 +20,11 @@ def check_and_load_data():
         return [],[]
     
     print("Datasets found, loading...")
-    titanic_data = loadtxt(os.path.join(DATASETS,'train.csv'), delimiter=',')
+
+    titanic_data = pd.read_csv(os.path.join(DATASETS,'train.csv'))
+    print("Information about loaded training set ->")
+    print(titanic_data.info())
+    X_train = titanic_data.drop("Survived",axis=1)
+    y_train = titanic_data["Survived"].copy()
+
+    return X_train,y_train
