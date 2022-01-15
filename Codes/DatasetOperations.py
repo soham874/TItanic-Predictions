@@ -1,5 +1,5 @@
 from sklearn.model_selection import StratifiedShuffleSplit
-from numpy import savetxt
+from sklearn.impute import SimpleImputer
 
 import os
 import matplotlib.pyplot as plt
@@ -17,14 +17,12 @@ if not os.path.isdir(MODEL_PATH):
 if not os.path.isdir(DATASETS):
     os.makedirs(DATASETS)
 
-
-
 # load the training set as a pandas dataframe and split it into features and labels
 def check_and_load_data():
 
     if not os.path.isfile(os.path.join(DATASETS,'train.csv')):
         print("Datsets not found. Please download them from https://www.kaggle.com/c/titanic/data and move them to Datasets directory for this project before proceeding")
-        return [],[]
+        return []
     
     print("<< Datasets found, loading...")
 
@@ -34,6 +32,33 @@ def check_and_load_data():
 
     return titanic_data
 
+# create the test and train set
+def train_test_split(titanic_data):
+
+    # Splitting the set into train and test set
+    print("<< Splitting data into train and test sets ->")
+
+    stratfold = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
+    for train_index, test_index in stratfold.split(titanic_data, titanic_data["Survived"]):
+        strat_train_set = titanic_data.loc[train_index]
+        strat_test_set = titanic_data.loc[test_index]
+
+    print("Size of train and test set")
+    print(strat_train_set.shape)
+    print(strat_test_set.shape)
+    print("Target stats for the created set ->")
+    print(strat_train_set["Survived"].value_counts())
+    print(strat_test_set["Survived"].value_counts()) 
+
+    # splitting data into features and labels
+    X_train = strat_train_set.drop("Survived",axis=1)
+    y_train = strat_train_set["Survived"].copy()
+
+    strat_test_set.to_csv(os.path.join(DATASETS,'test_from_train.csv')) 
+
+    return X_train,y_train
+
+# 
 def process_data(titanic_data):
 
     # Coverting Embarked data into integer type
@@ -51,36 +76,22 @@ def process_data(titanic_data):
     titanic_data.loc[titanic_data["Sex"] == "male", "Sex" ] = 1
     titanic_data.loc[titanic_data["Sex"] == "female", "Sex" ] = 2
     titanic_data["Sex"] = pd.to_numeric(titanic_data["Sex"])
-
+    
     # Dropping cabin, name and ticket number column
     titanic_data.drop("Name",axis=1,inplace = True)
     titanic_data.drop("Ticket",axis=1,inplace = True)
     titanic_data.drop("Cabin",axis=1,inplace = True)
 
-    # Splitting the set into train and test set
-    print("<< Splitting data into train and test sets ->")
-    stratfold = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
-    for train_index, test_index in stratfold.split(titanic_data, titanic_data["Survived"]):
-        strat_train_set = titanic_data.loc[train_index]
-        strat_test_set = titanic_data.loc[test_index]
-    print("Size of train and test set")
-    print(strat_train_set.shape)
-    print(strat_test_set.shape)
-    print("Target stats for the created set ->")
-    print(strat_train_set["Survived"].value_counts())
-    print(strat_test_set["Survived"].value_counts())  
+    # Filling in missing "age" and "emabrked" column using median impute startegy
+    imputer = SimpleImputer(strategy="most_frequent")
+    imputer.fit(titanic_data)
+    titanic_data = pd.DataFrame(imputer.transform(titanic_data),columns=titanic_data.columns)
 
     # plotting the available information for each column in histograms and saving it
     print("Information about final processed training dataset ->")
-    print(strat_train_set.info())
-    strat_train_set.hist(bins=50, figsize=(20,15))
-    plt.savefig(os.path.join(IMAGE_PATH,"column_information_prepared.png"))
-    plt.show()
+    print(titanic_data.info())
+    titanic_data.hist(bins=50, figsize=(20,15))
+    # plt.savefig(os.path.join(IMAGE_PATH,"column_information_prepared.png"))
+    # plt.show()
 
-    # splitting data into features and labels
-    X_train = strat_train_set.drop("Survived",axis=1)
-    y_train = strat_train_set["Survived"].copy()
-
-    strat_test_set.to_csv(os.path.join(DATASETS,'test_from_train.csv'))
-
-    return X_train,y_train
+    return titanic_data
