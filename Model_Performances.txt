@@ -1,0 +1,9 @@
+
+Evaluation for model KNClassifier
+
+Confusion matrix -> 
+[[98 12]
+ [52 17]]
+Precision -> 0.6197701149425288
+Recall -> 0.5686429512516469
+F1 score -> 0.5503924646781789

@@ -2,7 +2,6 @@ import os
 import joblib
 import numpy as np
 
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_score
 
@@ -11,20 +10,6 @@ from DatasetOperations import *
 MODEL_PATH = os.path.join("Models")
 if not os.path.isdir(MODEL_PATH):
     os.makedirs(MODEL_PATH)
-
-# Find the best parameters
-def load_best_parameters(X,y,modelname,param_grid, knn_clf):
-
-    if os.path.isfile(os.path.join(MODEL_PATH,modelname)):
-        return joblib.load(os.path.join(MODEL_PATH,modelname))
-
-    grid_seach_result = GridSearchCV(knn_clf , param_grid , cv=5, verbose=20)
-    grid_seach_result.fit(X, y)
-
-    print(grid_seach_result.best_params_)
-    print(grid_seach_result.best_score_)
-    joblib.dump(grid_seach_result.best_estimator_,os.path.join(MODEL_PATH,modelname))
-    return grid_seach_result.best_estimator_
 
 # function to save confusion and its error matrix
 def conf_err(conf_mat,name):
