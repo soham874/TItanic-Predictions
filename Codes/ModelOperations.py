@@ -2,7 +2,6 @@ import os
 import joblib
 import numpy as np
 
-from numpy import loadtxt
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_score
@@ -14,17 +13,11 @@ if not os.path.isdir(MODEL_PATH):
     os.makedirs(MODEL_PATH)
 
 # Find the best parameters
-def load_best_parameters(X,y,modelname):
+def load_best_parameters(X,y,modelname,param_grid, knn_clf):
 
     if os.path.isfile(os.path.join(MODEL_PATH,modelname)):
         return joblib.load(os.path.join(MODEL_PATH,modelname))
 
-    param_grid = {
-        'weights':['uniform','distance'],
-        'n_neighbors':[5,10,100]
-    }
-
-    knn_clf = KNeighborsClassifier()
     grid_seach_result = GridSearchCV(knn_clf , param_grid , cv=5, verbose=20)
     grid_seach_result.fit(X, y)
 
@@ -59,8 +52,12 @@ def evaluate_model(model,name):
     # Making predictions
     print("~~~~~~~~~~~~~~~~~~~~~~ Model Evaluation ~~~~~~~~~~~~~~~~~~~")
     print("Loading test set...")
-    X_test = loadtxt(os.path.join(DATASETS,'X_test.csv'), delimiter=',')
-    y_test = loadtxt(os.path.join(DATASETS,'y_test.csv'), delimiter=',')
+    test_set = pd.read_csv(os.path.join(DATASETS,'test_from_train.csv'))
+    test_set = process_data(test_set)
+    X_test = test_set.drop("Survived",axis=1)
+    X_test = X_test.drop(X_test.columns[[0]],axis=1)
+    y_test = test_set["Survived"].copy()
+    
     print("Predicting labels using model....")
     y_pred = model.predict(X_test)
 
