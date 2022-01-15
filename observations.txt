@@ -1,1 +1,2 @@
 <1> Loading the data in a numpy array is causing problems as dataset contains string information
+<2> Loading the columns, I suspect the 'name' and 'ticket number' columns are useless.

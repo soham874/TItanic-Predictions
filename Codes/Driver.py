@@ -1,6 +1,8 @@
 from DatasetOperations  import *
 
-X_train, y_train = check_and_load_data()
+titanic_data = check_and_load_data()
 print("Size of loaded training dataset->")
-print(X_train.shape)
-print(y_train.shape)
+print(titanic_data.shape)
+# print(y_train.shape)
+
+process_data(titanic_data)
