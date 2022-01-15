@@ -30,7 +30,7 @@ def conf_err(conf_mat,name):
 
 # Using this scores, we can plot the precision recall curve for the calssifier
 def precision_recall_vs_threshold(precisions, recalls, thresholds, name):
-    plt.figure(figsize=(16, 9), dpi=150)
+    # plt.figure(figsize=(16, 9), dpi=150)
     plt.rcParams.update({'font.size': 22})
     plt.plot(thresholds, precisions[:-1], "b--", label="Precision")
     plt.plot(thresholds, recalls[:-1], "g-", label="Recall")
@@ -43,7 +43,7 @@ def precision_recall_vs_threshold(precisions, recalls, thresholds, name):
 # Another form of measurement is to plot the precision vs recall curve.
 def precision_vs_recall(precisions, recalls, name):
     plt.rcParams.update({'font.size': 22})
-    plt.figure(figsize=(16, 9), dpi=150)
+    # plt.figure(figsize=(16, 9), dpi=150)
     plt.plot(recalls[:-1], precisions[:-1], "b-")
     plt.xlabel('Recall')
     plt.ylabel('Precision')
@@ -53,7 +53,7 @@ def precision_vs_recall(precisions, recalls, name):
 
 # Plot ROC curve
 def plot_roc_curve(fpr, tpr, name):
-    plt.figure(figsize=(16, 9), dpi=150)
+    # plt.figure(figsize=(16, 9), dpi=150)
     plt.rcParams.update({'font.size': 22})
     plt.plot(fpr, tpr, "b-", label="Precision")
     plt.plot(np.linspace(0,1,100),np.linspace(0,1,100),"g--")
