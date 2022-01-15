@@ -1,4 +1,4 @@
-from numpy import loadtxt,savetxt
+from sklearn.model_selection import StratifiedShuffleSplit
 
 import os
 import matplotlib.pyplot as plt
@@ -24,10 +24,10 @@ def check_and_load_data():
         print("Datsets not found. Please download them from https://www.kaggle.com/c/titanic/data and move them to Datasets directory for this project before proceeding")
         return [],[]
     
-    print("Datasets found, loading...")
+    print("<< Datasets found, loading...")
 
     titanic_data = pd.read_csv(os.path.join(DATASETS,'train.csv'))
-    print("Information about loaded training set ->")
+    # print("Information about loaded training set ->")
     # print(titanic_data.info())
 
     # splitting data into features and labels
@@ -53,7 +53,21 @@ def process_data(titanic_data):
     titanic_data.drop("Ticket",axis=1,inplace = True)
     titanic_data.drop("Cabin",axis=1,inplace = True)
 
-    # return
+    return
+
+    # Splitting the set into train and test set
+    print("<< Splitting data into train and test sets ->")
+    stratfold = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
+    for train_index, test_index in stratfold.split(titanic_data, titanic_data["Survived"]):
+        strat_train_set = titanic_data.loc[train_index]
+        strat_test_set = titanic_data.loc[test_index]
+    print("Size of train and test set")
+    print(strat_train_set.shape)
+    print(strat_test_set.shape)
+    print("Target stats for the created set ->")
+    print(strat_train_set["Survived"].value_counts())
+    print(strat_test_set["Survived"].value_counts())
+    
     # plotting the available information for each column in histograms and saving it
     print(titanic_data.info())
     titanic_data.hist(bins=50, figsize=(20,15))
