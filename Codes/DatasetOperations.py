@@ -6,14 +6,11 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # Generic Paths
-MODEL_PATH = os.path.join("Models")
 DATASETS = os.path.join("Datasets")
 IMAGE_PATH = os.path.join("Images")
 
 if not os.path.isdir(IMAGE_PATH):
     os.makedirs(IMAGE_PATH)
-if not os.path.isdir(MODEL_PATH):
-    os.makedirs(MODEL_PATH)
 if not os.path.isdir(DATASETS):
     os.makedirs(DATASETS)
 
@@ -58,7 +55,7 @@ def train_test_split(titanic_data):
 
     return X_train,y_train
 
-# 
+# Pre-process data
 def process_data(titanic_data):
 
     # Coverting Embarked data into integer type
