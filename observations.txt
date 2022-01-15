@@ -1,3 +1,4 @@
 <1> Loading the data in a numpy array is causing problems as dataset contains string information
 <2> Loading the columns, I suspect the 'name' and 'ticket number' columns are useless.
 <3> 'Cabin' and 'Embarked' needs to be checked
+<4> 'Cabin' needs to be dropped as most of the information is missing

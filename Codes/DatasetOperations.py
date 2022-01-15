@@ -48,10 +48,12 @@ def process_data(titanic_data):
     titanic_data.loc[titanic_data["Embarked"] == 'S', "Embarked" ] = 3
     titanic_data["Embarked"] = pd.to_numeric(titanic_data["Embarked"])
 
-    # Dropping name and ticket number column
+    # Dropping cabin, name and ticket number column
     titanic_data.drop("Name",axis=1,inplace = True)
     titanic_data.drop("Ticket",axis=1,inplace = True)
+    titanic_data.drop("Cabin",axis=1,inplace = True)
 
+    # return
     # plotting the available information for each column in histograms and saving it
     print(titanic_data.info())
     titanic_data.hist(bins=50, figsize=(20,15))
