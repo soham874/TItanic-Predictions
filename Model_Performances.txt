@@ -8,12 +8,13 @@ Precision -> 0.6197701149425288
 Recall -> 0.5686429512516469
 F1 score -> 0.5503924646781789
 AUC -> 0.5170619235836628
-Evaluation for model KNClassifier
+
+Evaluation for model DecisionTreeClassifier
 
 Confusion matrix -> 
-[[98 12]
- [52 17]]
-Precision -> 0.6197701149425288
-Recall -> 0.5686429512516469
-F1 score -> 0.5503924646781789
-AUC -> 0.5170619235836628
+[[87 23]
+ [21 48]]
+Precision -> 0.7408059467918623
+Recall -> 0.7432806324110672
+F1 score -> 0.7419397116644824
+AUC -> 0.7161396574440053

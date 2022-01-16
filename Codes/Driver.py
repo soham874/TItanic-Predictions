@@ -1,7 +1,7 @@
 from DatasetOperations  import *
 from ModelOperations import *
 
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
 
 titanic_data = check_and_load_data()
 print("Size of loaded training dataset->")
@@ -11,17 +11,18 @@ X_train,y_train = train_test_split(titanic_data)
 X_train = process_data(X_train)
 print(X_train.shape)
 
-modelname = "BestKNClassifier.pkl"
+modelname = "BestDecisionTreeClassifier.pkl"
 # Loading the best model using specified parameters
 if os.path.isfile(os.path.join(MODEL_PATH,modelname)):
     best_model = joblib.load(os.path.join(MODEL_PATH,modelname))
 else:
 
     param_grid = {
-        'weights':['uniform','distance'],
-        'n_neighbors':[5,10,100]
+        'criterion':["gini", "entropy"],
+        'splitter':["best", "random"],
+        'max_features':[2,5,8]
     }
-    model = KNeighborsClassifier()
+    model = DecisionTreeClassifier()
 
     grid_seach_result = GridSearchCV(model , param_grid , cv=5, verbose=20)
     grid_seach_result.fit(X_train, y_train)
@@ -35,4 +36,4 @@ print("Model found with parameters ->")
 print(best_model)
 
 # Making predictions and evaluating the model, saving the paramters
-evaluate_model(best_model,"KNClassifier")
+evaluate_model(best_model,"DecisionTreeClassifier")
