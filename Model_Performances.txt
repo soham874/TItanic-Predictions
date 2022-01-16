@@ -28,3 +28,13 @@ Precision -> 0.8092464768478573
 Recall -> 0.7833333333333333
 F1 score -> 0.7918035030103996
 AUC -> 0.7479578392621872
+
+Evaluation for model RandomForest
+
+Confusion matrix -> 
+[[96 14]
+ [22 47]]
+Precision -> 0.7920255626562934
+Recall -> 0.7769433465085639
+F1 score -> 0.7825910931174089
+AUC -> 0.7152832674571805
